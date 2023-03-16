@@ -6,7 +6,7 @@ public class ClientMain {
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
-		ClientService service = ClientService.getInstance();
+		ClientService service = ClientService.getInstance(); // 싱글톤
 		boolean loginOk = false;
 		
 		while(true) {
@@ -55,5 +55,4 @@ public class ClientMain {
 		}
 		System.out.println("프로그램 종료");
 	}
-
 }

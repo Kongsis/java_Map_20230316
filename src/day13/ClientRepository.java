@@ -14,7 +14,7 @@ public class ClientRepository {
 	Map<String, ClientDTO> clientMap = new HashMap<>();
 //	List<ClientDTO> cList = new ArrayList<>();
 	List<BreakdownDTO> bList = new ArrayList<>();
-	
+
 	public boolean save(ClientDTO clientDTO) {
 		if(clientMap.put(clientDTO.getAccount(),clientDTO)==null) {
 			return true;
@@ -49,7 +49,6 @@ public class ClientRepository {
 		}
 		return list;
 	}
-	
 	public String getAccount(String id, String password) {
 		for(String c : clientMap.keySet()) {
 			if(id.equals(clientMap.get(c).getId()) && password.equals(clientMap.get(c).getPassword())) {
@@ -58,7 +57,6 @@ public class ClientRepository {
 		}
 		return null;
 	}
-	
 	public boolean deposit(String account, long money) {
 		for(String c : clientMap.keySet()) {
 			if(account.equals(clientMap.get(c).getAccount())) {
@@ -100,8 +98,6 @@ public class ClientRepository {
 		}
 		return false;
 	}
-	
-	
 	public boolean update(String id, String password, String updatePassword) {
 		for(String c : clientMap.keySet()) {
 			if(id.equals(clientMap.get(c).getId()) && password.equals(clientMap.get(c).getPassword())) {
@@ -121,17 +117,3 @@ public class ClientRepository {
 		return false;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

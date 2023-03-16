@@ -3,6 +3,7 @@ package day13;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 public class ClientService {
 	// 싱글톤패턴
@@ -53,6 +54,10 @@ public class ClientService {
 		System.out.println("-------------------------------------------------------");
 		for(String key : cMap.keySet()) {
 			System.out.println(cMap.get(key));
+		}
+		Map<String, ClientDTO> sortedMap = new TreeMap<>(cMap);
+		for(String b : sortedMap.keySet()) {
+			System.out.println(cMap.get(b));
 		}
 	}
 	public void findById() {
@@ -159,16 +164,3 @@ public class ClientService {
 		System.out.println("로그아웃");
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
