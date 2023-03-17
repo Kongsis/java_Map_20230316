@@ -7,29 +7,56 @@ import java.util.TreeMap;
 
 public class ClientService {
 	// 싱글톤패턴
-	private static ClientService service = new ClientService();
+	private static ClientService service = new ClientService(); // 싱글톤(접근제한)
 	private ClientService() {}
 	public static ClientService getInstance() {
 		return service;
 	}
 	
 	private Scanner sc = new Scanner(System.in);
-	private ClientRepository repository = ClientRepository.getInstance();
+	private ClientRepository repository = ClientRepository.getInstance(); //싱글톤 getInstance() 메소드를 통한 객체 사용
 	private String loginId = null;
 	private String loginPassword = null;
 	
+//	public void save() {
+//		ClientDTO clientDTO = new ClientDTO();
+//		System.out.print("id> ");
+//		clientDTO.setId(repository.duChk());
+//		System.out.print("password> ");
+//		clientDTO.setPassword(sc.next());
+//		System.out.print("name> ");
+//		clientDTO.setName(sc.next());
+//		if(repository.save(clientDTO)) {
+//			System.out.println("회원가입성공");
+//		}else {
+//			System.out.println("회원가입실패");
+//		}
+//	}
 	public void save() {
 		ClientDTO clientDTO = new ClientDTO();
 		System.out.print("id> ");
-		clientDTO.setId(sc.next());
-		System.out.print("password> ");
-		clientDTO.setPassword(sc.next());
-		System.out.print("name> ");
-		clientDTO.setName(sc.next());
-		if(repository.save(clientDTO)) {
-			System.out.println("회원가입성공");
-		}else {
-			System.out.println("회원가입실패");
+		while(true) {
+			boolean find = false;
+
+			clientDTO.setId(sc.next());
+			if(repository.overlapCheck(clientDTO.getId())) {
+				System.out.print("중복된 아이디입니다. 다시입력> ");
+				find = true;
+				continue;
+			}else {
+				System.out.print("password> ");
+				clientDTO.setPassword(sc.next());
+				System.out.print("name> ");
+				clientDTO.setName(sc.next());
+				if(repository.save(clientDTO)) {
+					System.out.println("회원가입성공");
+				}else {
+					System.out.println("회원가입실패");
+				}
+			}
+			if(!find) {
+				break;
+			}
 		}
 	}
 	public boolean loginCheck() {
@@ -50,14 +77,14 @@ public class ClientService {
 	}
 	public void findAll() {
 		Map<String, ClientDTO> cMap = repository.findAll();
+		Map<String, ClientDTO> sortedMap = new TreeMap<>(cMap);
 		System.out.println("계좌번호\t\t아이디\t비밀번호\t예금주\t잔액\t가입일");
 		System.out.println("-------------------------------------------------------");
-		for(String key : cMap.keySet()) {
-			System.out.println(cMap.get(key));
-		}
-		Map<String, ClientDTO> sortedMap = new TreeMap<>(cMap);
+//		for(String key : cMap.keySet()) {
+//			System.out.println(cMap.get(key));
+//		}
 		for(String b : sortedMap.keySet()) {
-			System.out.println(cMap.get(b));
+			System.out.println(sortedMap.get(b));
 		}
 	}
 	public void findById() {
@@ -69,15 +96,15 @@ public class ClientService {
 			System.out.println("-------------------------------------------------------");
 			System.out.println(clientDTO.toString());
 			System.out.println("-------------------------------------------------------");
-			List<BreakdownDTO> bList = repository.breakList(clientDTO.getAccount());
-			if(bList.size() == 0) {
+			Map<String, BreakdownDTO> bMap = repository.breakList(clientDTO.getAccount());
+			if(bMap.size() == 0) {
 				System.out.println("입출금 내역이 없습니다");
 			}else {
 				System.out.println("▼입출금내역▼");
 				System.out.println("-------------------------------------------------------");
 				System.out.println("계좌번호\t\t구분\t거래금액\t거래후잔액\t거래일");
-				for(BreakdownDTO b : bList) {
-					System.out.println(b.toString());
+				for(String b : bMap.keySet()) {
+					System.out.println(bMap.get(b));
 				}
 			}
 			System.out.println("-------------------------------------------------------");

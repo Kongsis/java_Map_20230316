@@ -2,22 +2,56 @@ package day13;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.TreeMap;
 
 public class ClientRepository {
-	private static ClientRepository repository = new ClientRepository();
+	private static ClientRepository repository = new ClientRepository(); // 싱글톤(접근제한)
 	private ClientRepository() {}
 	public static ClientRepository getInstance() {
 		return repository;
 	}
-	Map<String, ClientDTO> clientMap = new HashMap<>();
+	Map<String, ClientDTO> clientMap = new HashMap<>(); // HashMap<String, ClientDTO>는 <>로 생략이 되었을때 앞에 있는 부모객체의 
+//	Map<String, ClientDTO> clientMap = new LinkedHashMap<>();
 //	List<ClientDTO> cList = new ArrayList<>();
-	List<BreakdownDTO> bList = new ArrayList<>();
+//	List<BreakdownDTO> bList = new ArrayList<>();
+	Map<String, BreakdownDTO> bMap = new TreeMap<>();
+//	Scanner sc = new Scanner(System.in);
+	
 
 	public boolean save(ClientDTO clientDTO) {
 		if(clientMap.put(clientDTO.getAccount(),clientDTO)==null) {
 			return true;
+		}
+		return false;
+	}
+//	public String duChk() {
+//		String result;
+//		
+//		while(true) {
+//			boolean find = false;
+//			result = sc.next();
+//			for(String c : clientMap.keySet()) {
+//				if(result.equals(clientMap.get(c).getId())){
+//					System.out.print("중복된 아이디 입니다. 다시입력> ");
+//					find = true;
+//					break;
+//				}
+//			}
+//			if(!find) {
+//				break;
+//			}
+//		}
+//		return result;
+//	}
+	public boolean overlapCheck(String id) {
+		for(String d : clientMap.keySet()) {
+			if(id.equals(clientMap.get(d).getId())) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -40,14 +74,15 @@ public class ClientRepository {
 		}
 		return null;
 	}
-	public List<BreakdownDTO> breakList(String account){
-		List<BreakdownDTO> list = new ArrayList<>();
-		for(BreakdownDTO b : bList) {
-			if(b.getAccount().equals(account)) {
-				list.add(b);
+	public Map<String, BreakdownDTO> breakList(String account){
+		Map<String, BreakdownDTO> Map = new TreeMap<>();
+		for(String b : bMap.keySet()) {
+			if(account.equals(bMap.get(b).getAccount())) {
+				Map.put(b,bMap.get(b));
+//				list.add(b);
 			}
 		}
-		return list;
+		return Map;
 	}
 	public String getAccount(String id, String password) {
 		for(String c : clientMap.keySet()) {
@@ -66,7 +101,8 @@ public class ClientRepository {
 				breakdownDTO.setDivision("입금");
 				breakdownDTO.setDealMoney(money);
 				breakdownDTO.setTotalMoney(clientMap.get(c).getBalance());
-				bList.add(breakdownDTO);
+				bMap.put(breakdownDTO.getLine(), breakdownDTO);
+//				bList.add(breakdownDTO);
 				return true;
 			}
 		}
@@ -82,7 +118,8 @@ public class ClientRepository {
 					breakdownDTO.setDivision("출금");
 					breakdownDTO.setDealMoney(money);
 					breakdownDTO.setTotalMoney(clientMap.get(c).getBalance());
-					bList.add(breakdownDTO);
+					bMap.put(breakdownDTO.getLine(), breakdownDTO);
+//					bList.add(breakdownDTO);
 					return true;
 				}else {
 					return false;
@@ -116,4 +153,5 @@ public class ClientRepository {
 		}
 		return false;
 	}
+	
 }
