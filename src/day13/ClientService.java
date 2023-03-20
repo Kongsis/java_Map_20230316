@@ -32,31 +32,58 @@ public class ClientService {
 //			System.out.println("회원가입실패");
 //		}
 //	}
+//	public void save() {
+//		ClientDTO clientDTO = new ClientDTO();
+//		System.out.print("id> ");
+//		while(true) {
+//			boolean find = false;
+//			clientDTO.setId(sc.next());
+//			if(repository.overlapCheck(clientDTO.getId())) {
+//				System.out.print("중복된 아이디입니다. 다시입력> ");
+//				find = true;
+//				continue;
+//			}else {
+//				System.out.print("password> ");
+//				clientDTO.setPassword(sc.next());
+//				System.out.print("name> ");
+//				clientDTO.setName(sc.next());
+//				if(repository.save(clientDTO)) {
+//					System.out.println("회원가입성공");
+//				}else {
+//					System.out.println("회원가입실패");
+//				}
+//			}
+//			if(!find) {
+//				break;
+//			}
+//		}
+//	}
 	public void save() {
 		ClientDTO clientDTO = new ClientDTO();
 		System.out.print("id> ");
-		while(true) {
-			boolean find = false;
+		clientDTO.setId(sc.next());
+		boolean checkResult = true;
+		String id = null;
+		do {
+			System.out.print("id> ");
+			id = sc.next();
+			if (repository.overlapCheck(id)) {
+				System.out.println("사용가능합니다.");
+				checkResult = false;
+			} else {
+				System.out.println("이미 사용중인 id 입니다.");
+			}
+		} while (checkResult);
 
-			clientDTO.setId(sc.next());
-			if(repository.overlapCheck(clientDTO.getId())) {
-				System.out.print("중복된 아이디입니다. 다시입력> ");
-				find = true;
-				continue;
-			}else {
-				System.out.print("password> ");
-				clientDTO.setPassword(sc.next());
-				System.out.print("name> ");
-				clientDTO.setName(sc.next());
-				if(repository.save(clientDTO)) {
-					System.out.println("회원가입성공");
-				}else {
-					System.out.println("회원가입실패");
-				}
-			}
-			if(!find) {
-				break;
-			}
+		clientDTO.setId(id);
+		System.out.print("password> ");
+		clientDTO.setPassword(sc.next());
+		System.out.print("name> ");
+		clientDTO.setName(sc.next());
+		if (repository.save(clientDTO)) {
+			System.out.println("회원가입성공");
+		} else {
+			System.out.println("회원가입실패");
 		}
 	}
 	public boolean loginCheck() {

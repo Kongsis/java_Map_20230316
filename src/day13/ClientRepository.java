@@ -19,14 +19,31 @@ public class ClientRepository {
 //	List<ClientDTO> cList = new ArrayList<>();
 //	List<BreakdownDTO> bList = new ArrayList<>();
 	Map<String, BreakdownDTO> bMap = new TreeMap<>();
+	Map<String, ClientDTO> dMap = new HashMap<>();
 //	Scanner sc = new Scanner(System.in);
 	
 
+//	public boolean saveover(ClientDTO clientDTO, String id) {
+//		boolean find = false;
+//		while(find) {
+//			if(clientMap.put(clientDTO.getAccount(),clientDTO)==null){
+//				find = true;
+//				for(String d : clientMap.keySet()) {
+//					if(id.equals(clientMap.get(d).getId())) {
+//						find = true;
+//					}
+//				}
+//			}
+//			
+//		}
+//		return find;
+//	}
 	public boolean save(ClientDTO clientDTO) {
 		if(clientMap.put(clientDTO.getAccount(),clientDTO)==null) {
 			return true;
+		}else {
+			return false;
 		}
-		return false;
 	}
 //	public String duChk() {
 //		String result;
@@ -50,29 +67,38 @@ public class ClientRepository {
 	public boolean overlapCheck(String id) {
 		for(String d : clientMap.keySet()) {
 			if(id.equals(clientMap.get(d).getId())) {
-				return true;
+//				return true;
+				return false;
 			}
 		}
-		return false;
+//		return false;
+		return true;
 	}
 	public boolean loginCheck(String id, String password) {
-		for(String c : clientMap.keySet()) {
-			if(id.equals(clientMap.get(c).getId()) && password.equals(clientMap.get(c).getPassword())) {
-				return true;
-			}
+//		for(String c : clientMap.keySet()) {
+//			if(id.equals(clientMap.get(c).getId()) && password.equals(clientMap.get(c).getPassword())) {
+//				return true;
+//			}
+		if(clientChk(id, password) != null) {
+			return true;
+		}else {
+			return false;
 		}
-		return false;
 	}
 	public Map<String, ClientDTO> findAll(){
 		return clientMap;
 	}
 	public ClientDTO findById(String id, String password) {
-		for(String c : clientMap.keySet()) {
-			if(id.equals(clientMap.get(c).getId()) && password.equals(clientMap.get(c).getPassword())) {
-				return clientMap.get(c);
-			}
+//		for(String c : clientMap.keySet()) {
+//			if(id.equals(clientMap.get(c).getId()) && password.equals(clientMap.get(c).getPassword())) {
+//				return clientMap.get(c);
+//			}
+		String key = clientChk(id, password);
+		if(key != null) {
+			return clientMap.get(key);
+		}else {
+			return null;
 		}
-		return null;
 	}
 	public Map<String, BreakdownDTO> breakList(String account){
 		Map<String, BreakdownDTO> Map = new TreeMap<>();
@@ -85,12 +111,17 @@ public class ClientRepository {
 		return Map;
 	}
 	public String getAccount(String id, String password) {
-		for(String c : clientMap.keySet()) {
-			if(id.equals(clientMap.get(c).getId()) && password.equals(clientMap.get(c).getPassword())) {
-				return clientMap.get(c).getAccount();
-			}
+//		for(String c : clientMap.keySet()) {
+//			if(id.equals(clientMap.get(c).getId()) && password.equals(clientMap.get(c).getPassword())) {
+//				return clientMap.get(c).getAccount();
+//			}
+//		}
+		String key = clientChk(id, password);
+		if(key != null) {
+			return clientMap.get(key).getAccount();
+		}else {
+			return null;
 		}
-		return null;
 	}
 	public boolean deposit(String account, long money) {
 		for(String c : clientMap.keySet()) {
@@ -136,22 +167,42 @@ public class ClientRepository {
 		return false;
 	}
 	public boolean update(String id, String password, String updatePassword) {
-		for(String c : clientMap.keySet()) {
-			if(id.equals(clientMap.get(c).getId()) && password.equals(clientMap.get(c).getPassword())) {
-				clientMap.get(c).setPassword(updatePassword);
-				return true;
-			}
+//		for(String c : clientMap.keySet()) {
+//			if(id.equals(clientMap.get(c).getId()) && password.equals(clientMap.get(c).getPassword())) {
+//				clientMap.get(c).setPassword(updatePassword);
+//				return true;
+//			}
+//		}
+		String key = clientChk(id, password);
+		if(key != null) {
+			clientMap.get(key).setPassword(updatePassword);
+			return true;
+		}else {
+			return false;
 		}
-		return false;
 	}
 	public boolean delete(String id, String password) {
-		for(String c : clientMap.keySet()) {
-			if(id.equals(clientMap.get(c).getId()) && password.equals(clientMap.get(c).getPassword())) {
-				clientMap.remove(c);
-				return true;
+//		for(String c : clientMap.keySet()) {
+//			if(id.equals(clientMap.get(c).getId()) && password.equals(clientMap.get(c).getPassword())) {
+//				clientMap.remove(c);
+//				return true;
+//			}
+//		}
+		String key = clientChk(id, password);
+		if(key != null) {
+			clientMap.remove(key);
+			return true;
+		}else {
+			return false;
+		}
+	}
+	private String clientChk(String id, String password) {
+		for(String key : clientMap.keySet()) {
+			if(id.equals(clientMap.get(key).getId()) && password.equals(clientMap.get(key).getPassword())) {
+				return key;
 			}
 		}
-		return false;
+		return null;
 	}
 	
 }
